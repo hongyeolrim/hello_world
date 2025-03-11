@@ -15,6 +15,7 @@ public class HelloExe {
     	                  //변수 타입과 넣는 값의 타입이 같아야 함
     	
     	System.out.println("점수는 " + score + "점 입니다");
+	System.out.println("안녕");
     	
     }
 }
