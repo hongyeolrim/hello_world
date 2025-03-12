@@ -40,7 +40,7 @@ public static int getLastDate(int month) {
 			System.out.print(" " + day);
 		}
 		System.out.println(); //줄바꿈
-		int month = 4;
+		int month = 3;
 		int space = getFirstDay(month); //1일의 위치값
 		int lastDate = getLastDate(month); //마지막날
 		for(int s = 0; s < space; s++) {
@@ -51,12 +51,18 @@ public static int getLastDate(int month) {
 				System.out.print("   " + i);
 				//int를 문자열로 바꾸는 메소드, length()는 문자 길이를 알려주는 메소드
 			}else if(String.valueOf(i).length() == 2) {
-				System.out.print("  " + i);
+				if(i == 21) {
+					System.out.print(" " + "평가");		
+				} else { 
+					System.out.print("  " + i);
+				}
 			}
 			if((space + i) % 7 == 0) {
 				System.out.println();
-			}		
+			}
 		}
+		
+		
 	}
 
 }

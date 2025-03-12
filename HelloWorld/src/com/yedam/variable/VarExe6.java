@@ -37,19 +37,19 @@ public class VarExe6 {
     	
      Scanner scn = new Scanner(System.in);  //컨트롤 + 시프트 + 영어 o = import단축키
      Member m1 = new Member();  //인스턴스 생성
-     mem.setMember(name, score);
+     m1.setName("홍열림");
      Member m2 = new Member();
-     m2.name = "최민수";
+     m2.setName("최민수");
      Member m3 = new Member();
-     m3.name = "다진마늘";
+     m3.setName("다진마늘");
      Member m4 = new Member();
-     m4.name = "고양이";
+     m4.setName("고양이");
      
      //배열
      Member[] members = {m1, m2, m3, m4};
      
      for(int i = 0; i < members.length; i++) {
-    	 members[i].getScore() += (int)(Math.random() * 31) + 70;    //여기에 = 쓰는 거랑 +=쓰는 거랑 똑같나?
+    	 members[i].setScore((int)(Math.random() * 31) + 70);    //여기에 = 쓰는 거랑 +=쓰는 거랑 똑같나?
     	 System.out.println("이름: " + members[i].getName() + ", 점수: " + members[i].getScore());
      }
      

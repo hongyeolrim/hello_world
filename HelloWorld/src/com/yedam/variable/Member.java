@@ -51,7 +51,9 @@ public class Member {
     	this.score = score;
     }  //메소드를 통해 입력되는 값을 제어하도록 하기 위해 private을 쓰는 거임
     
-   
+    public void setName(String name) {
+    	this.name = name;
+    }
 }
  
 
