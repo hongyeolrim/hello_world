@@ -22,10 +22,11 @@ public class Book {
 		// 생성자는 타입 지정을 안 해, 받을 매개값들의 타입만 지정해
 
 	public Book(String title, String author, String publisher, int price, int orderNo) {
-		this.title = title;
-		this.author = author;
-		this.publisher = publisher;
-		this.price = price;
+//		this.title = title;
+//		this.author = author;
+//		this.publisher = publisher;
+//		this.price = price;
+		this(title, author, publisher, price);  //생성자1 호출
 		this.orderNo = orderNo;
 	}
 
@@ -82,10 +83,12 @@ public class Book {
 		String msg = "제목은 " + title + " / 저자는 " + author + "\n출판사는 " + publisher + " / 가격은 " + price + "원";
 		return msg;
 	}
+
 	public String showListWithNo() {
 		String list = orderNo + "제목: " + title + " / 저자: " + author + "\n출판사: " + publisher + " / 가격: " + price + "원";
 		return list;
 	}
+
 	public String showList() {
 		String list = "제목: " + title + " / 저자: " + author + "\n출판사: " + publisher + " / 가격: " + price + "원";
 		return list;
