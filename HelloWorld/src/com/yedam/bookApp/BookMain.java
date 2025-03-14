@@ -3,12 +3,23 @@ package com.yedam.bookApp;
 import java.util.Scanner;
 
 public class BookMain {
-	static Scanner scn = new Scanner(System.in); // 사용자에게서 값을 입력받는 스캐너 실행, 기본 입력 장치로부터 값을 받을 거임(System.in)
-	static Book[] bookStore = new Book[100]; // 100개의 값을 넣을 수 있는 배열 인스턴스 생성, Book클래스를 사용, 형식은 그냥 외우기(배열 형식이라 [] 넣어줬다고
-												// 생각하면 편함)
+
+	private static BookMain instance = new BookMain();
+
+	private BookMain() {
+
+	}
+
+	public static BookMain getInstance() {
+		return instance;
+	}
+
+	Scanner scn = new Scanner(System.in); // 사용자에게서 값을 입력받는 스캐너 실행, 기본 입력 장치로부터 값을 받을 거임(System.in)
+	Book[] bookStore = new Book[100]; // 100개의 값을 넣을 수 있는 배열 인스턴스 생성, Book클래스를 사용, 형식은 그냥 외우기(배열 형식이라 [] 넣어줬다고
+										// 생각하면 편함)
 
 	// 순번 생성
-	public static int getSequenceNo() {
+	public int getSequenceNo() {
 		int max = 0;
 		for (int i = 0; i < bookStore.length; i++) {
 			if (bookStore[i] != null && bookStore[i].getOrderNo() > max) {
@@ -19,7 +30,7 @@ public class BookMain {
 	}
 
 	// 등록
-	public static void add() {
+	public void add() {
 		System.out.println("도서명을 입력하세요>> ");
 		String title = scn.nextLine(); // 사용자에게서 문자열 입력받음
 		for (int i = 0; i < bookStore.length; i++) {
@@ -44,7 +55,7 @@ public class BookMain {
 		}
 	} // END OF ADD
 
-	public static void edit() {
+	public void edit() {
 		System.out.println("도서명을 입력하세요>> ");
 		String title = scn.nextLine();
 		boolean isExist = false;
@@ -76,7 +87,7 @@ public class BookMain {
 		}
 	} // END OF EDIT
 
-	public static void delete() {
+	public void delete() {
 		System.out.println("도서명을 입력하세요>> ");
 		String title = scn.nextLine();
 		boolean isExist = false;
@@ -93,7 +104,7 @@ public class BookMain {
 		}
 	} // END OF DELETE
 
-	public static void list() {
+	public void list() {
 		for (int i = 0; i < bookStore.length - 1; i++) {
 			for (int j = 0; j < bookStore.length - 1; j++) {
 				if (bookStore[j] == null && bookStore[j + 1] != null) {
@@ -116,7 +127,7 @@ public class BookMain {
 		}
 	}
 
-	public static void searchByPublisher() {
+	public void searchByPublisher() {
 		System.out.println("출판사 이름을 입력하세요>> ");
 		String publisher = scn.nextLine(); // 사용자에게 출판사 입력받음
 		boolean found = false; // 책을 찾았는지 여부를 저장하는 변수
@@ -133,7 +144,7 @@ public class BookMain {
 		}
 	}
 
-	public static void main(String[] args) {
+	public void main(String[] args) {
 //	    	Book book = new Book();   //인스턴스 생성을 반드시 먼저하고 값을 넣어야 오류가 안 남
 // 	    	book.setTitle("어린왕자");
 //	    	book.setAuthor("생택쥐페리");
@@ -181,7 +192,7 @@ public class BookMain {
 		System.out.println("end of prog.");
 	} // END OF MAIN
 
-	static void init() {
+	void init() {
 		bookStore[0] = new Book("구구구", "비둘기", "한빛출", 1800, 1);
 		bookStore[1] = new Book("짹짹짹", "참새", "우리출", 3000, 2);
 		bookStore[2] = new Book("부자되는방법", "김거지", "가람출", 120000, 3);
