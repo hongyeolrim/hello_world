@@ -5,11 +5,12 @@ import java.util.Scanner;
 public class BookMain {
 
 	private static BookMain instance = new BookMain();
-	private User[] users;
+	private User[] users = new User[100];
 
 	private BookMain() {
-		users = new User[] { new User("hong", "p1111", "홍길동"), new User("lee", "p2222", "이순신"),
-				new User("park", "p3333", "박혁거세") };
+		users[0] = new User("hong", "p1111", "홍길동");
+		users[1] = new User("lee", "p2222", "이순신");
+		users[2] = new User("park", "p3333", "박혁거세");
 	}
 
 	public static BookMain getInstance() {
