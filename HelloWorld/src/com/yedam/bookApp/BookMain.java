@@ -5,9 +5,11 @@ import java.util.Scanner;
 public class BookMain {
 
 	private static BookMain instance = new BookMain();
+	private User[] users;
 
 	private BookMain() {
-
+		users = new User[] { new User("hong", "p1111", "홍길동"), new User("lee", "p2222", "이순신"),
+				new User("park", "p3333", "박혁거세") };
 	}
 
 	public static BookMain getInstance() {
@@ -17,6 +19,17 @@ public class BookMain {
 	Scanner scn = new Scanner(System.in); // 사용자에게서 값을 입력받는 스캐너 실행, 기본 입력 장치로부터 값을 받을 거임(System.in)
 	Book[] bookStore = new Book[100]; // 100개의 값을 넣을 수 있는 배열 인스턴스 생성, Book클래스를 사용, 형식은 그냥 외우기(배열 형식이라 [] 넣어줬다고
 										// 생각하면 편함)
+
+	public boolean login(String id, String password) {
+		for (User userList : users) {
+			if (userList.getId().equals(id) && userList.getPassword().equals(password)) {
+				System.out.println("로그인 성공! 환영합니다, " + userList.getName() + "님!");
+				return true;
+			}
+		}
+		System.out.println("로그인 실패! 아이디 또는 비밀번호가 올바르지 않습니다!");
+		return false;
+	}
 
 	// 순번 생성
 	public int getSequenceNo() {
@@ -193,11 +206,11 @@ public class BookMain {
 	} // END OF MAIN
 
 	void init() {
-		bookStore[0] = new Book("구구구", "비둘기", "한빛출", 1800, 1);
-		bookStore[1] = new Book("짹짹짹", "참새", "우리출", 3000, 2);
-		bookStore[2] = new Book("부자되는방법", "김거지", "가람출", 120000, 3);
-		bookStore[3] = new Book("오늘은 내가 요리사", "백종원", "한빛출", 17000, 4);
-		bookStore[4] = new Book("연어초밥이란 무엇인가", "미스터초밥왕", "가람출", 30000, 5);
-		bookStore[5] = new Book("슈퍼샤이", "뉴진스", "가람출", 22000, 6);
+		bookStore[0] = new Book("구구구", "비둘기", "한빛 출판사", 1800, 1);
+		bookStore[1] = new Book("짹짹짹", "참새", "우리 출판사", 3000, 2);
+		bookStore[2] = new Book("부자되는방법", "김거지", "가람 출판사", 120000, 3);
+		bookStore[3] = new Book("오늘은 내가 요리사", "짜파게티", "한빛 출판사", 17000, 4);
+		bookStore[4] = new Book("연어초밥이란 무엇인가", "미스터초밥왕", "가람 출판사", 30000, 5);
+		bookStore[5] = new Book("슈퍼샤이", "뉴진스", "희진 출판사", 22000, 6);
 	}
 }
