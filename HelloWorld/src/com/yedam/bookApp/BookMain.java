@@ -23,11 +23,17 @@ public class BookMain {
 
 	public boolean login(String id, String password) {
 		for (User userList : users) {
-			if (userList.getId().equals(id) && userList.getPassword().equals(password)) {
+			if (userList == null) {
+				continue; // ❗ null 값 건너뛰고 다음 반복으로 이동
+			}
+			if (userList.getId() != null && userList.getPassword() != null && userList.getId().equals(id)
+					&& userList.getPassword().equals(password)) {
 				System.out.println("로그인 성공! 환영합니다, " + userList.getName() + "님!");
 				return true;
 			}
 		}
+
+		// ❗ 로그인 실패했을 경우 메시지 출력 후 false 반환
 		System.out.println("로그인 실패! 아이디 또는 비밀번호가 올바르지 않습니다!");
 		return false;
 	}
@@ -172,39 +178,47 @@ public class BookMain {
 //	        //이건 내가 만든 생성자를 사용한 거, 매번 값을 넣지 않고 이렇게 한줄로 완성
 		init();
 		boolean run = true; // 불리언 변수 선언?(아마도)
+		int menu = 9;
 
 		while (run) {
 			System.out.println("1.도서등록 2.수정 3.삭제 4.목록 5.출판사 검색 9.종료");
 			System.out.println("선택>> ");
-			int menu = Integer.parseInt(scn.nextLine()); // 숫자인데 문자열로 받고 다시 정수로 바꿔주는 이유는 : n하고 엔터까지 동시에 처리하기 위해서(아마도)
-															// 스위치 문에는 조건에 값이 정수로 들어가야 매칭 확인 가능하니까
 
-			switch (menu) {
-			case 1:
-				add();
+			try {
+				menu = Integer.parseInt(scn.nextLine()); // 숫자인데 문자열로 받고 다시 정수로 바꿔주는 이유는 : n하고 엔터까지 동시에 처리하기 위해서(아마도)
 				break;
-			case 2:
-				edit();
-				break;
-			case 3:
-				delete();
-				break;
-			case 4: // 목록 - 제목, 저자, 가격만 보여주고 싶음
-				list();
-				break;
-			case 5:
-				searchByPublisher();
-				break;
-			case 9: // 종료
-				run = false;
-				break;
-			default:
-				System.out.println("메뉴를 다시 선택하세요!");
-				break;
+			} catch (NumberFormatException e) {
+				System.out.println("올바른 값을 입력해 주세요");
 			}
 		}
+		switch (menu) {
+		case 1:
+			add();
+			break;
+		case 2:
+			edit();
+			break;
+		case 3:
+			delete();
+			break;
+		case 4: // 목록 - 제목, 저자, 가격만 보여주고 싶음
+			list();
+			break;
+		case 5:
+			searchByPublisher();
+			break;
+		case 9: // 종료
+			run = false;
+			break;
+		default:
+			System.out.println("메뉴를 다시 선택하세요!");
+			break;
+		}
+
 		System.out.println("end of prog.");
-	} // END OF MAIN
+	}
+
+	// END OF MAIN
 
 	void init() {
 		bookStore[0] = new Book("구구구", "비둘기", "한빛 출판사", 1800, 1);

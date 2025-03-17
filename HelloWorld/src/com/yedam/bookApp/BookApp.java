@@ -18,7 +18,8 @@ public class BookApp {
 		if (mainApp.login(id, password)) {
 			mainApp.main(args);
 		} else {
-			System.out.println("아이디 혹은 비밀번호가 일치하지 않아 프로그램을 종료합니다.");
+			System.out.println("사용자 정보가 일치하지 않아 프로그램을 종료합니다.");
+			return;
 		}
 		scanner.close();
 	}
