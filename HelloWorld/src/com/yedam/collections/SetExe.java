@@ -1,6 +1,7 @@
 package com.yedam.collections;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -125,8 +126,39 @@ public class SetExe {
 		System.out.println("=== forEach로 출력 ===");
 		ilist.forEach(num -> System.out.print(num + " "));
 		System.out.println();
+
+		// forEach(); 메서드 기본 형식
+		// 컬렉션 변수명.forEach( (컬렉션의 값을 하나씩 받아오는 매개 변수) -> { 실행할 코드 } );
+
+		List<String> fruits = Arrays.asList("Apple", "Banana", "Cherry");
+
+		fruits.forEach(fruit -> System.out.println(fruit));
+//		📌 실제로 실행될 때
+//		fruits 리스트에 ["Apple", "Banana", "Cherry"]가 들어 있음.
+//		forEach()가 첫 번째 값을 가져와 fruit = "Apple"로 만듦 → System.out.println(fruit); 실행.
+//		다음으로 fruit = "Banana"가 됨 → 출력.
+//		마지막으로 fruit = "Cherry"가 됨 → 출력.
+
+		List<Integer> numbers = Arrays.asList(10, 15, 20, 25, 30);
+		// 20 이상인 숫자만 출력
+		numbers.forEach(num -> {
+			if (num >= 20) {
+				System.out.println(num);
+			}
+		});
+
 	}
 }
+
+//기본 for 문 : 이 방법은 리스트의 특정 위치(index)를 사용해야 할 때 유용함
+//확장 for 문 : 특정 위치(index)를 신경 쓰지 않고 "리스트 전체"를 순서대로 순회할 때 좋음
+//Iterator : 리스트를 반복하면서 값을 삭제해야 할 때 유용함, 요소를 삭제하려면 Iterator.remove()를 사용할 수 있음
+//forEach() 메서드 : 리스트의 모든 요소를 한 번에 처리할 때 좋음! 👉 출력, 필터링, 변환 등 다양한 작업을 깔끔하게 처리
+
+//👉 요소 삭제가 필요하면 Iterator 사용
+//👉 삭제할 필요 없으면 forEach(); 사용 (가장 짧고 간결)
+//✔ 추가로, 만약 예외 처리(try-catch)나 break 같은 게 필요하면 확장 for문
+
 
 //<Iterator 인터페이스> => 반복자
 //it.hasNext() → 다음 데이터가 있는지 물어보는 메서드(있으면 true, 없으면 false)
