@@ -1,5 +1,6 @@
 package com.yedam.classes;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MethodMain {
@@ -47,23 +48,21 @@ public class MethodMain {
 				name = scn.nextLine();
 				Product search = new Product();
 				search.setProductName(name);
-				Product[] list = m2.productList(search);
-				for (int i = 0; i < list.length; i++) {
-					if (list[i] != null) {
-						System.out.println(list[i].showList());
-					}
+				List<Product> list = m2.productList(search);
+				for (int i = 0; i < list.size(); i++) {
+					System.out.println(list.get(i).showList());
 				}
 				break;
 			case 5:
 				run = false;
+			default:
+				System.out.println("잘못된 입력입니다. 1~5 사이의 숫자를 입력하세요.");
 			}
-
 		}
 		System.out.println("end of prog.");
 		scn.close();
 	}
 }
-
 //	void method1234() {
 //		MethodExe2 m2 = new MethodExe2();
 //
