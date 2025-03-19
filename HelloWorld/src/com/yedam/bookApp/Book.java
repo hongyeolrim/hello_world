@@ -6,8 +6,9 @@ public class Book {
 	private String publisher;
 	private int price;
 	private int orderNo;
+	private String bookCode;
 
-//생성자 정의, 보통은 필드 다음에 옴
+	// 생성자 정의, 보통은 필드 다음에 옴
 	public Book() {
 
 	} // 기본 생성자
@@ -26,8 +27,16 @@ public class Book {
 //		this.author = author;
 //		this.publisher = publisher;
 //		this.price = price;
-		this(title, author, publisher, price);  //생성자1 호출
+		this(title, author, publisher, price); // 생성자1 호출
 		this.orderNo = orderNo;
+	}
+
+	public Book(String bookCode, String title, String author, String publisher, int price) {
+		this.bookCode = bookCode;
+		this.title = title;
+		this.author = author;
+		this.publisher = publisher;
+		this.price = price;
 	}
 
 //값을 받아서 넣을 메소드
@@ -75,10 +84,17 @@ public class Book {
 		this.orderNo = orderNo;
 	}
 
+	public String getBookCode() {
+		return bookCode;
+	}
+
+	public void setBookCode(String bookCode) {
+		this.bookCode = bookCode;
+	}
+
 //입력된 값을 전부 한 번에 보여주는 메소드
 //메시지를 반환하고 메소드 종료해야 하니까 return 넣음
 //반환한다는 거는 출력이 된다는 거임
-//질문 : 18000이라는 int가 포함되어 있는데, 그래도 String인가?
 	public String showBookInfo() {
 		String msg = "제목은 " + title + " / 저자는 " + author + "\n출판사는 " + publisher + " / 가격은 " + price + "원";
 		return msg;
@@ -93,4 +109,5 @@ public class Book {
 		String list = "제목: " + title + " / 저자: " + author + "\n출판사: " + publisher + " / 가격: " + price + "원";
 		return list;
 	}
+
 }
