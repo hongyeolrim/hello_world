@@ -1,6 +1,8 @@
 package com.yedam.classes;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
 	private String productCode;
 	private String productName;
 	private int price;
@@ -8,7 +10,7 @@ public class Product {
 	Product() {
 	}
 
-	Product(String pc, String pn, int price) {
+	public Product(String pc, String pn, int price) {
 		productCode = pc;
 		productName = pn;
 		this.price = price;

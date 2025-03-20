@@ -1,5 +1,10 @@
 package com.yedam.classes;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,15 +12,50 @@ public class MethodExe2 {
 	private List<Product> store;
 
 	MethodExe2() {
+		init();
+	}
+
+	void init() {
 		store = new ArrayList<Product>();
-		store.add(new Product("A001", "지우개", 500));
-		store.add(new Product("B001", "샤프", 1000));
-		store.add(new Product("C001", "연필", 800));
-		store.add(new Product("D001", "지우개2", 1000));
+		File file = new File("c:/temp/object.dat");
+
+		if (!file.exists()) {
+			save(); // 빈 리스트를 저장해서 파일 생성
+		}
+
+		try (FileInputStream fis = new FileInputStream("c:/temp/object.dat");
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+			store = (List<Product>) ois.readObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//		try {
+//			Scanner scn = new Scanner(new FileInputStream("c:/temp/message.txt"));
+//			while (true) {
+//				String msg = scn.nextLine();
+//				String[] msgAry = msg.split(" ");
+//				store.add(new Product(msgAry[0], msgAry[1], Integer.parseInt(msgAry[2])));
+//			}
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (NoSuchElementException e) {
+//
+//		}
+	}
+
+	void save() {
+		try (FileOutputStream fos = new FileOutputStream("c:/temp/object.dat");
+				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			oos.writeObject(store);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	boolean add(Product prd) {
 		boolean result = store.add(prd);
+		System.out.println("상품 등록 성공!");
 		return result;
 	} // end of add
 //메소드도 타입을 가질 수 있음..내가 만든 Product라는 라이브러리 클래스를 여기 메소드의 타입으로 지정

@@ -15,7 +15,7 @@ public class MethodMain {
 		MethodExe2 m2 = new MethodExe2();
 
 		while (run) {
-			System.out.println("1.상품 등록  2.상품 수정  3삭제  4. 목록  5.종료");
+			System.out.println("1.상품 등록  2.상품 수정  3.삭제  4. 목록  5.종료");
 			System.out.print("메뉴 선택>> ");
 			int menu = Integer.parseInt(scn.nextLine());
 
@@ -55,11 +55,13 @@ public class MethodMain {
 				break;
 			case 5:
 				run = false;
+				m2.save();
+				System.out.println("프로그램을 종료합니다.");
+				break;
 			default:
 				System.out.println("잘못된 입력입니다. 1~5 사이의 숫자를 입력하세요.");
 			}
 		}
-		System.out.println("end of prog.");
 		scn.close();
 	}
 }

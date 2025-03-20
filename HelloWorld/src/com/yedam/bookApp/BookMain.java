@@ -22,17 +22,9 @@ public class BookMain {
 	Scanner scn = new Scanner(System.in);
 	Book[] bookStore = new Book[100];
 
-	public boolean login(String id, String password) {
-		for (User userList : users) {
-			if (userList == null)
-				continue;
-			if (userList.getId().equals(id) && userList.getPassword().equals(password)) {
-				System.out.println("로그인 성공! 환영합니다, " + userList.getName() + "님!");
-				return true;
-			}
-		}
-		System.out.println("로그인 실패! 아이디 또는 비밀번호가 올바르지 않습니다!");
-		return false;
+	public User login(String id, String pw) {
+		MemberJdbc dao = new MemberJdbc();
+		return dao.login(id, pw);
 	}
 
 	public int getSequenceNo() {
@@ -167,6 +159,21 @@ public class BookMain {
 		boolean run = true;
 
 		while (run) {
+			System.out.println("아이디와 비밀번호를 입력하세요");
+			System.out.println("아이디>> ");
+			String id = app.scn.nextLine();
+			System.out.println("비밀번호>> ");
+			String pw = app.scn.nextLine();
+			app.login(id, pw);
+
+			User loggedInUser = app.login(id, pw);
+
+			// ✅ 로그인 실패한 경우
+			if (loggedInUser.getId().equals("Unknown")) {
+				System.out.println("로그인 실패! 아이디 또는 비밀번호를 확인하세요.");
+				continue; // 다시 로그인 요청
+			}
+
 			System.out.println("[1.도서등록] [2.수정] [3.삭제] [4.목록] [5.출판사 검색] [6. 도서 코드 검색] [9.종료]");
 			System.out.println("선택>> ");
 			int menu = Integer.parseInt(app.scn.nextLine());
