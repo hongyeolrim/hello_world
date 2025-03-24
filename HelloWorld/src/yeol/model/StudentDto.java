@@ -27,12 +27,12 @@ public class StudentDto {
 	// 아이디 형식에 제약을 걸기 위해 regular expression 사용
 	// 4글자 이상 10글자 이하, 영문 대소문자 그리고 숫자만 허용
 	// 글자수 제한하는 코드 사이에 공백 들어가면 안 됨! 주의!
-	public boolean checkLoginId(String loginId) {
+	public static boolean checkLoginId(String loginId) {
 		String regex = "^[a-zA-Z0-9]{4,10}$";
 		return Pattern.matches(regex, loginId);
 	}
 
-	public boolean checkLoginPw(String loginPw) {
+	public static boolean checkLoginPw(String loginPw) {
 		String regex = "^[a-zA-Z0-9]{4,12}$";
 		return Pattern.matches(regex, loginPw);
 	}

@@ -64,16 +64,30 @@ import java.io.OutputStream;
 //PrintWriter (편리한 출력, 자동 개행) 그냥 평소에 이거 쓰셈 / print(), println(), printf() 사용 가능
 //BufferedWriter 는 대용량 처리할 때 쓰기
 
-//✔ InputStream is → 물(데이터)을 가져오기 위해 물이 담긴 통(파일1)에 수도꼭지 연결해서 틈
+//✔ InputStream is → 물(데이터)을 가져오기 위해 물이 담긴 통(파일1)에 수도꼭지를 연결함
 //✔ OutputStream os → 물(데이터)을 최종적으로 옮겨 받을 '다른 통'(파일2)
-//✔ byte[] buf = new byte[100] → 물을 옮기는 '바가지', 물을 작은 컵 같은데 옮기면 오래 걸리니까 큰 바가지에 담아서 옮기는 거임
-//✔ is.read(buf) → 물이 담긴 통(파일1)에 연결된 수도꼭지에서 흘러나오는 물(데이터)을 바가지(buf)에 담는다
-//✔ os.write(buf, 0, data) → 바가지(buf)에서 OutputStream(통)에 물을 옮겨 담는다
+//✔ byte[] buf = new byte[100] → buf는 물을 옮기는 '바가지', buf가 없으면 물은 작은 컵에 담겨서 조금씩 옮겨짐, 근데 그러면 너무 오래 걸리고 답답하니까 큰 바가지에 담아서 옮기는 거임
+//✔ is.read(buf) → 물이 담긴 통(파일1)에 연결된 수도꼭지에서 흘러나오는 물(데이터)을 바가지(buf)에 담음
+//✔ os.write(buf, 0, data) → 바가지(buf)에 담긴 물을 OutputStream(통)으로 옮겨 담는다
 //✔is.close(); // 수도꼭지 잠그기 
 //  os.flush(); // 바가지(buf)에서 물을 통(os)에 옮길 때, 혹시 남은 물이 있으면 마지막까지 완전히 박박 털어서 넣음
 //  os.close(); // 데이터 받을 통 뚜껑 닫기 
 //전부 다 닫아야 되는 이유 : 수도꼭지(is)를 안 잠그면 계속 물이 새고,
 //파일 통(os)을 뚜껑을 안 닫으면 데이터가 제대로 저장되지 않을 수도 있음
+
+//FileOutputStream은 바이트를 파일에 직접 쓰는 친구
+//ObjectOutputStream은 객체를 바이트로 바꿔주는 친구
+//객체를 파일에 저장하려면 둘이 같이 일해야 해!
+
+//[파일에 저장된 바이트]
+//        ↓
+//[FileInputStream]  → 파일에서 바이트 읽어옴
+//        ↓
+//[ObjectInputStream] → 바이트를 객체로 되살림!
+//        ↓
+//객체로 복구! (예: Person "Amy", 20)
+//
+//Object 타입으로 복구되기 때문에 강제로 해당 객체 타입으로 형변환 해줘야함
 
 public class StreamExe {
 	public static void main(String[] args) {

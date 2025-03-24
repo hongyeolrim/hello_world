@@ -47,4 +47,10 @@ public class ClassDto {
 		return tuitionFee;
 	}
 
+	@Override
+	public String toString() {
+		String formattedFee = String.format("%,.0f", tuitionFee); // 쉼표 추가, 소수점 없앰
+		return "[" + classCode + "] " + className + " | 강사: " + profName + " | 기간: " + startDate + " ~ " + endDate
+				+ " | 수강료: " + formattedFee + "원";
+	}
 }
