@@ -180,6 +180,38 @@ public class InstituteDao {
 		return false;
 	} // end of 수강 신청 중복 확인 메서드
 
+	// 특정 학생이 수강 신청한 수업 가져오기 메서드
+	public ClassDto getEnrolledClass(String studentCode) {
+		String sql = "SELECT c.class_code, c.class_name, c.prof_name, c.start_date, c.end_date, c.tuition_fee "
+				+ "FROM classes c JOIN enrollment e ON c.class_code = e.class_code " + "WHERE e.student_code = ?";
+
+		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, studentCode);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return new ClassDto(rs.getString("class_code"), rs.getString("class_name"), rs.getString("prof_name"),
+						rs.getDate("start_date"), rs.getDate("end_date"), rs.getDouble("tuition_fee"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	} // end of 특정 학생이 수강 신청한 수업 가져오기 메서드
+
+	// 조회수 증가 메서드
+	public boolean incrementViews(int postCode) {
+		String sql = "UPDATE qna_board SET views = views + 1 WHERE post_code = ?";
+
+		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, postCode);
+			return stmt.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	} // end of 조회수 증가 메서드
+
 	// 게시글 목록 처리 메서드
 	public List<BoardDto> boardList() {
 		List<BoardDto> boardList = new ArrayList<>();
@@ -198,19 +230,6 @@ public class InstituteDao {
 		return boardList;
 	} // end of 게시글 목록 처리 메서드
 
-	// 조회수 증가 메서드
-	public boolean incrementViews(int postCode) {
-		String sql = "UPDATE qna_board SET views = views + 1 WHERE post_code = ?";
-
-		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setInt(1, postCode);
-			return stmt.executeUpdate() > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	} // end of 조회수 증가 메서드
-
 	// 게시글 출력 처리 메서드
 	public BoardDto getBoard(int postCode) {
 		String sql = "SELECT post_code, title, content, login_id, write_date, views FROM qna_board WHERE post_code = ?";
@@ -219,7 +238,6 @@ public class InstituteDao {
 			stmt.setInt(1, postCode);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
-				incrementViews(postCode);
 				return new BoardDto(rs.getInt("post_code"), rs.getString("title"), rs.getString("content"),
 						rs.getString("login_id"), rs.getDate("write_date"), rs.getInt("views"));
 			}
@@ -228,24 +246,6 @@ public class InstituteDao {
 		}
 		return null;
 	} // end of 게시글 출력 처리 메서드
-
-	// 댓글 출력 메서드
-	public List<CommentDto> commentList() {
-		List<CommentDto> commentList = new ArrayList<>();
-		String sql = "SELECT comment_code, post_code, content, login_id, write_date FROM qna_comments ORDER BY comment_code DESC";
-
-		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				commentList.add(new CommentDto(rs.getInt("comment_code"), rs.getInt("post_code"),
-						rs.getString("content"), rs.getString("login_id"), rs.getDate("write_date")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return new ArrayList<>(); // 예외 발생 시 빈 리스트 반환
-		}
-		return commentList;
-	} // end of 댓글 출력 메서드
 
 	// 게시글 등록 처리 메서드
 	public boolean posting(String loginId, String title, String content) {
@@ -267,6 +267,122 @@ public class InstituteDao {
 		}
 	} // end of 게시글 등록 처리 메서드
 
+	// 게시글 삭제 메서드
+	public boolean deletePost(int postCode) {
+		String deleteCommentsSql = "DELETE FROM qna_comments WHERE post_code = ?"; // 게시글 삭제되면 댓글도 같이 삭제
+		String deletePostSql = "DELETE FROM qna_board WHERE post_code = ?";
+
+		try (Connection conn = openConnection();
+				PreparedStatement deleteCommentsStmt = conn.prepareStatement(deleteCommentsSql);
+				PreparedStatement deletePostStmt = conn.prepareStatement(deletePostSql)) {
+
+			deleteCommentsStmt.setInt(1, postCode); // 댓글 삭제
+			deleteCommentsStmt.executeUpdate(); // 댓글이 없어도 그냥 시도하고 넘어감
+
+			deletePostStmt.setInt(1, postCode);
+
+			return deletePostStmt.executeUpdate() > 0; // 게시글 삭제만 성공하면 true
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	} // end of 게시글 삭제 메서드
+
+	// 글번호로 게시글 조회하는 메서드
+	public BoardDto getPostByCode(int postCode) {
+		String sql = "SELECT post_code, title, content, login_id, write_date, views FROM qna_board WHERE post_code = ?";
+		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, postCode);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				BoardDto dto = new BoardDto();
+				dto.setPostCode(rs.getInt("post_code"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setLoginId(rs.getString("login_id"));
+				dto.setWriteDate(rs.getDate("write_date"));
+				dto.setViews(rs.getInt("views"));
+				return dto;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	} // end of 글번호로 게시글 조회하는 메서드
+
+	// 이전 게시물의 글번호 가져오는 메서드
+	// 반환 타입을 int가 아니라 Integer로 하는 이유 : null 값도 받아야 해서
+	public Integer getPrevPostCode(int postCode) {
+		String sql = "SELECT post_code FROM qna_board WHERE post_code < ? ORDER BY post_code DESC FETCH FIRST 1 ROWS ONLY";
+		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setInt(1, postCode);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt("post_code");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	// end of 이전 게시물의 글번호 가져오는 메서드
+
+	// 다음 게시물의 글번호 가져오는 메서드
+	public Integer getNextPostCode(int postCode) {
+		String sql = "SELECT post_code FROM qna_board WHERE post_code > ? ORDER BY post_code FETCH FIRST 1 ROWS ONLY";
+		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setInt(1, postCode);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt("post_code");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	} // end of 다음 게시물의 글번호 가져오는 메서드
+
+	// 게시글(n)의 전체 댓글 출력 메서드
+	public List<CommentDto> commentList(int postCode) {
+		List<CommentDto> commentList = new ArrayList<>();
+		String sql = "SELECT comment_code, post_code, content, login_id, write_date FROM qna_comments WHERE post_code = ? ORDER BY comment_code DESC";
+
+		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, postCode);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				commentList.add(new CommentDto(rs.getInt("comment_code"), rs.getInt("post_code"),
+						rs.getString("content"), rs.getString("login_id"), rs.getDate("write_date")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return commentList;
+	} // end of 게시글(n)의 전체 댓글 출력 메서드
+
+	// 댓글 번호로 댓글 조회하는 메서드 - 상세보기
+	public CommentDto getComment(int commentCode) {
+		String sql = "SELECT comment_code, post_code, content, login_id, write_date FROM qna_comments WHERE comment_code = ?";
+		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, commentCode);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return new CommentDto(rs.getInt("comment_code"), rs.getInt("post_code"), rs.getString("content"),
+						rs.getString("login_id"), rs.getDate("write_date"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null; // 조회 실패 시 null 반환
+	} // end of 댓글 번호로 댓글 조회하는 메서드 - 상세보기
+
 	// 댓글 등록 처리 메서드
 	public boolean commenting(int postCode, String loginId, String content) {
 		if (content == null || content.trim().isEmpty()) {
@@ -287,39 +403,16 @@ public class InstituteDao {
 		}
 	} // end of 댓글 등록 처리 메서드
 
-	// 게시글 삭제 메서드
-	public boolean deletePost(int postCode) {
-		String deleteCommentsSql = "DELETE FROM qna_comments WHERE post_code = ?"; // 게시글 삭제되면 댓글도 같이 삭제
-		String deletePostSql = "DELETE FROM qna_board WHERE post_code = ?";
-
-		try (Connection conn = openConnection();
-				PreparedStatement deleteCommentsStmt = conn.prepareStatement(deleteCommentsSql);
-				PreparedStatement deletePostStmt = conn.prepareStatement(deletePostSql)) {
-
-			// 댓글 삭제
-			deleteCommentsStmt.setInt(1, postCode);
-			// 게시글 삭제
-			deletePostStmt.setInt(1, postCode);
-
-			// 댓글과 게시글 둘 다 삭제되었으면 true 반환
-			return deleteCommentsStmt.executeUpdate() > 0 && deletePostStmt.executeUpdate() > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	} // end of 게시글 삭제 메서드
-
 	// 댓글 삭제 메서드
-	public boolean deleteComment(int postCode) {
-		String sql = "DELETE FROM qna_comments WHERE post_code = ?";
+	public boolean deleteComment(int commentCode) {
+		String sql = "DELETE FROM qna_comments WHERE comment_code = ?";
 
 		try (Connection conn = openConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setInt(1, postCode);
+			stmt.setInt(1, commentCode);
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
 	} // end of 댓글 삭제 메서드
-
 }
